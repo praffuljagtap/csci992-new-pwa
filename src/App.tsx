@@ -1,26 +1,91 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import routes from './routes'
 
-const App = () => {
+
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import { a11yProps } from './components/extra'
+import TabPanelProps from './interfaces/tabPanelProps'
+import Overview from './pages/overview'
+import SearchByText from './pages/searchByText'
+
+
+const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.palette.background.paper,
+    },
+    tabs: {
+      paddingLeft: 10,
+      paddingRight: 10,
+      [theme.breakpoints.down('sm')]: {
+        fontSize: 11
+      }
+    }
+  })
+)
+
+const TabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      {children}
     </div>
-  );
+  )
+}
+
+const App: React.FC = () => {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(1)
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue)
+  };
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs"
+        >
+          {routes.map(route => {
+            return <Tab className={classes.tabs} key={route.key} label={route.name} {...a11yProps(route.key)} />
+          })}
+        </Tabs>
+      </AppBar>
+        <TabPanel value={value} index={0}>
+          <Overview />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <SearchByText />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+        Search by letter
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+        Search by image
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+        Search by name
+        </TabPanel>
+    </div>
+  )
 }
 
 export default App
