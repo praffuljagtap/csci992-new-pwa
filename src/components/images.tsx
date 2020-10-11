@@ -1,6 +1,7 @@
 import React from 'react'
-import { makeStyles, Theme, Container } from '@material-ui/core'
-import Grid from '@material-ui/core/Grid';
+import { makeStyles, Theme, Container, Paper } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import Zoom from '@material-ui/core/Zoom'
 
 import ImageInterface from '../interfaces/image'
 
@@ -15,6 +16,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     title: {
         fontSize: 25
     },
+    paper: {
+        width: '100%',
+        maxHeight: 300,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        '&:hover': {
+            scale: 1.02,
+            opacity: 0.8,
+            cursor: 'pointer'
+        }
+    },
+    images: {
+        width: '100%',
+        objectFit: 'cover'
+    }
   })
 )
 
@@ -23,7 +40,6 @@ type Props = {
 }
 
 const ImagesComponent: React.FC<Props> = ({ images }) => {
-    console.log(images)
     const classes = useStyles();
     return (
         <Container className={classes.container} maxWidth="md">
@@ -35,7 +51,11 @@ const ImagesComponent: React.FC<Props> = ({ images }) => {
                     {images.map((image, index) => {
                         return (
                             <Grid key={index} container item lg={4} xl={4} sm={4} xs={12} >
-                                <img src={image.link} />
+                                <Zoom in={true}>
+                                    <Paper className={classes.paper} elevation={4}>
+                                        <img className={classes.images} alt={image.people.join(', ')} src={image.link} />
+                                    </Paper>
+                                </Zoom>
                             </Grid>
                         )
                     })}

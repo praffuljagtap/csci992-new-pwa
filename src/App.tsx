@@ -11,6 +11,9 @@ import { a11yProps } from './components/extra'
 import TabPanelProps from './interfaces/tabPanelProps'
 import Overview from './pages/overview'
 import SearchByText from './pages/searchByText'
+import SearchByLetter from './pages/searchByLetter'
+import SearchByImage from './pages/searchByImage'
+import SearchByName from './pages/searchByName'
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,7 +49,7 @@ const TabPanel = (props: TabPanelProps) => {
 
 const App: React.FC = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(1)
+  const [value, setValue] = React.useState(4)
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue)
@@ -76,13 +79,13 @@ const App: React.FC = () => {
           <SearchByText />
         </TabPanel>
         <TabPanel value={value} index={2}>
-        Search by letter
+          <SearchByLetter />
         </TabPanel>
         <TabPanel value={value} index={3}>
-        Search by image
+          <SearchByImage />
         </TabPanel>
         <TabPanel value={value} index={4}>
-        Search by name
+          <SearchByName />
         </TabPanel>
     </div>
   )

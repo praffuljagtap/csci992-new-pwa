@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CSCI992 - PWA",
+  "name": "Face Based Retrival of Images",
   "icons": [
     {
       "src": "favicon.ico",
