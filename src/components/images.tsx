@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         marginTop: 40,
+        marginBottom: 20
     },
     title: {
         fontSize: 25
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     images: {
         width: '100%',
+        height: '100%',
         objectFit: 'cover'
     }
   })
@@ -53,7 +55,7 @@ const ImagesComponent: React.FC<Props> = ({ images }) => {
                             <Grid key={index} container item lg={4} xl={4} sm={4} xs={12} >
                                 <Zoom in={true}>
                                     <Paper className={classes.paper} elevation={4}>
-                                        <img className={classes.images} alt={image.people.join(', ')} src={image.link} />
+                                        <img className={classes.images} alt={image.link} src={image.link} />
                                     </Paper>
                                 </Zoom>
                             </Grid>

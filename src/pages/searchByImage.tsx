@@ -5,11 +5,10 @@ import Button from '@material-ui/core/Button'
 import SearchIcon from '@material-ui/icons/Search'
 
 
-import Person from '../interfaces/person'
 import ImagesComponent from '../components/images'
 import ImageInterface from '../interfaces/image'
 
-import { getPeople, getImagesOfAPerson } from '../services'
+import { readImage } from '../services'
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,31 +33,27 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SearchByImage: React.FC = () => {
     const classes = useStyles();
-    const [ names, setNames ] = useState<Person[]>([]);
-    const [ selectedPerson, setSelectedPerson ] = useState<Person | null>(null)
+    const uploadRef = React.createRef<HTMLInputElement>()
     const [ images, setImages ] = useState<ImageInterface[] | null>(null)
 
-    const getNames = () => {
-        // fetch names
-        const fetchedNames: Person[] = getPeople()
-        if (names.length === 0) {
-            setNames(fetchedNames)
+    const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            let img = event.target.files[0];
+            // const data = URL.createObjectURL(img)
+            let reader = new FileReader();
+            reader.readAsDataURL(img);
+            reader.onloadend = () => {
+                let base64Image = reader.result
+                readImage(base64Image).then(response => {
+                    console.log(response)
+                })
+            }
         }
     }
 
-    getNames() // Called by default
-
-    const getImages = () => {
-        //fetch images of that specific person
-        if (selectedPerson !== null) {
-            getImagesOfAPerson(selectedPerson).then(response => {
-                setImages(response)
-            })
-        } else {
-            // Display Error Message
-        }
+    const clickUpload = () => {
+        uploadRef.current?.click()
     }
-
 
     return (
         <Container maxWidth="xl">
@@ -69,15 +64,17 @@ const SearchByImage: React.FC = () => {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    // onClick={getImages}
+                    onClick={clickUpload}
                     startIcon={<SearchIcon />}
                 >
                     Upload Image
-                    <input
-                        type="file"
-                        style={{ display: "none" }}
-                    />
                 </Button>
+                <input
+                    type="file"
+                    style={{ display: "none" }}
+                    ref={uploadRef}
+                    onChange={uploadImage}
+                />
             </Container>
             <ImagesComponent images={images} />
         </Container>

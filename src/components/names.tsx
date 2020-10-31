@@ -32,7 +32,7 @@ const NamesComponent: React.FC<Props> = ({ people, getImages }) => {
     return (
         <Container className={classes.container} maxWidth="md">
             <h1 className={classes.title} >Names</h1>
-            {people === null ? (
+            {people === null || people.length === 0 ? (
                 <p>No Names Found</p>
             ) : (
                 <Grid container spacing={1}>

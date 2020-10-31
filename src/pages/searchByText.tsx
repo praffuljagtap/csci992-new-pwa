@@ -11,7 +11,7 @@ import Person from '../interfaces/person'
 import ImagesComponent from '../components/images'
 import ImageInterface from '../interfaces/image'
 
-import { getPeople, getImagesOfAPerson } from '../services'
+import { getAllNames, getImagesOfAPerson } from '../services'
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -45,10 +45,12 @@ const SearchByText: React.FC = () => {
 
     const getNames = () => {
         // fetch names
-        const fetchedNames: Person[] = getPeople()
-        if (names.length === 0) {
-            setNames(fetchedNames)
-        }
+        const fetchedNames: Person[] = []
+        getAllNames().then((response: Person[]) => {
+            if (names.length === 0) {
+                setNames(response)
+            }
+        })
     }
 
     getNames() // Called by default

@@ -1,5 +1,4 @@
 interface ImageInterface {
-    people: string[]
     link: string
 }
 
