@@ -9,6 +9,7 @@ import ImagesComponent from '../components/images'
 import ImageInterface from '../interfaces/image'
 
 import { readImage } from '../services'
+import ReadImageInterface from '../interfaces/readImage'
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,17 +36,18 @@ const SearchByImage: React.FC = () => {
     const classes = useStyles();
     const uploadRef = React.createRef<HTMLInputElement>()
     const [ images, setImages ] = useState<ImageInterface[] | null>(null)
+    const [ data, setData ] = useState<ReadImageInterface | null>(null)
 
     const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
-            // const data = URL.createObjectURL(img)
             let reader = new FileReader();
             reader.readAsDataURL(img);
             reader.onloadend = () => {
                 let base64Image = reader.result
-                readImage(base64Image).then(response => {
+                readImage(base64Image, img.name).then((response: ReadImageInterface) => {
                     console.log(response)
+                    setData(response)
                 })
             }
         }
@@ -75,8 +77,28 @@ const SearchByImage: React.FC = () => {
                     ref={uploadRef}
                     onChange={uploadImage}
                 />
+
+                {data !== null && !data.anyFacesDetected ? (
+                    <p>No Faces Detected</p>
+                ): data !== null && !data.anyFacesInDatabase ? (
+                    <p>No Faces Found in the Database</p>
+                ): (
+                    <div></div>
+                )}
+                
             </Container>
-            <ImagesComponent images={images} />
+            {data !== null ? (
+                data.result?.map((each, index) => {
+                    return (
+                        <div key={index}>
+                            <h1>{each.name}</h1>
+                            <ImagesComponent images={each.images} />
+                        </div>
+                    )
+                })
+            ): (
+                <ImagesComponent images={images} />
+            )}
         </Container>
     )
 }

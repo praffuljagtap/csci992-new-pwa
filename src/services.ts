@@ -1,5 +1,6 @@
 import ImageInterface from "./interfaces/image"
 import Person from "./interfaces/person"
+import ReadImageInterface from "./interfaces/readImage"
 
 const BASE_URL: string = 'http://localhost:5000/'
 
@@ -55,14 +56,20 @@ export const getImages = async (person: Person) => {
         })
 }
 
-export const readImage = (image: string | ArrayBuffer | null) => {
+export const readImage = (image: string | ArrayBuffer | null, name: string) => {
     return fetch(BASE_URL+'readImage', {
         method: 'POST',
         body: JSON.stringify({
-            data: image
+            data: image,
+            name: name
         })
     }).then(response => response.json())
-    .then(resp => {
-        return resp
+    .then((imagesRead: ReadImageInterface) => {
+        imagesRead.result?.map(each => {
+            each.images.map(image => {
+                image.link = BASE_URL + image.link
+            })
+        })
+        return imagesRead
     })
 }
